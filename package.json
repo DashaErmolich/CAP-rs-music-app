@@ -1,0 +1,40 @@
+{
+  "name": "cap-rs-music-app",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^7",
+    "@sap/cds-hana": "^2",
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "passport": "^0.6.0"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^7"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch:hybrid": "cds watch --profile hybrid",
+    "hana-deploy:hybrid": "cds deploy --to hana --profile hybrid"
+  },
+  "cds": {
+    "requires": {
+      "[hybrid]": {
+        "db": "hana"
+      },
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "dasha.ermolich@gmail.com": {
+            "roles": []
+          },
+          "*": false
+        }
+      }
+    }
+  }
+}
