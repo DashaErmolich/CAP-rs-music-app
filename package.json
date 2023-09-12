@@ -26,15 +26,7 @@
       "[hybrid]": {
         "db": "hana"
       },
-      "auth": {
-        "kind": "mocked",
-        "users": {
-          "dasha.ermolich@gmail.com": {
-            "roles": []
-          },
-          "*": false
-        }
-      }
+      "auth": "xsuaa"
     }
   }
 }
