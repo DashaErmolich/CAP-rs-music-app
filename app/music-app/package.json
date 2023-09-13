@@ -4,11 +4,15 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build:default": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "lint:fix": "ng lint --fix"
+    "lint:fix": "ng lint --fix",
+    "build": "npm run clean && ng build --deploy-url ./ && npm run zip",
+    "build:debug": "npm run clean && ng build --source-map --deploy-url ./ && npm run zip",
+    "zip": "cd dist && npx bestzip music-app-content.zip *",
+    "clean": "npx rimraf music-app-content.zip dist"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +45,7 @@
     "@angular/cli": "^15.1.4",
     "@angular/compiler-cli": "^15.1.0",
     "@angular/localize": "^15.1.2",
+    "@sap/cds-dk": "^7",
     "@types/jasmine": "~4.3.0",
     "@typescript-eslint/eslint-plugin": "5.48.1",
     "@typescript-eslint/parser": "5.48.1",

@@ -21,19 +21,21 @@ export class AuthorizedGuard implements CanActivate, CanActivateChild {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     state: RouterStateSnapshot,
   ): boolean {
-    this.authService.checkAuth();
+    // this.authService.checkAuth();
 
-    if (!this.state.isAuthorized) {
-      this.router.navigate(['welcome']);
-    }
+    // if (!this.state.isAuthorized) {
+    //   this.router.navigate(['welcome']);
+    // }
 
-    return this.state.isAuthorized;
+    // return this.state.isAuthorized;
+    return true;
   }
 
   canActivateChild(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
   ): boolean {
-    return this.canActivate(next, state);
+    // return this.canActivate(next, state);
+    return true;
   }
 }
