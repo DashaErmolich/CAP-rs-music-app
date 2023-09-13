@@ -1,7 +1,20 @@
 {
-  "welcomeFile": "index.html",
+  "welcomeFile": "/index.html",
   "authenticationMethod": "route",
   "routes": [
+    {
+      "source": "/test/(.*)",
+      "target": "/$1",
+      "destination": "DeezerArtists",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
+      "source": "/welcome/(.*)$",
+      "target": "index.html/welcome",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    },
     {
       "source": "^(.*)$",
       "target": "$1",

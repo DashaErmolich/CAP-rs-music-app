@@ -18,6 +18,7 @@ import { SearchResultComponent } from './music/pages/search-result/search-result
 import { AuthorizedGuard } from './guards/isAuthorized.guard';
 import { CustomPlaylistComponent } from './music/pages/custom-playlist/custom-playlist.component';
 import { CreatedPlaylistsComponent } from './music/pages/created-playlists/created-playlists.component';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
@@ -61,5 +62,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 })
 export class AppRoutingModule { }
