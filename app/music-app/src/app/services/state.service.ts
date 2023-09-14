@@ -9,6 +9,7 @@ import { ITrackListInfo } from '../models/audio-player.models';
 import { UtilsService } from './utils.service';
 import { ICustomPlaylistModel } from '../models/user-model.models';
 import { AudioService } from './audio.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -57,6 +58,7 @@ export class StateService {
     private authService: AuthorizationApiService,
     private myUtils: UtilsService,
     private myAudio: AudioService,
+    private userService: UserService,
   ) {
     const trackListInfo: ITrackListInfo | null = this.storage.getTrackListInfo();
     this.updateState();
@@ -164,6 +166,8 @@ export class StateService {
     this.authService.setUser(updatedUser).subscribe((res) => {
       this.user = res;
     });
+
+    this.userService.setUserFavourites(666, 'song').subscribe(() => console.log('song setted'), (err) => console.log(err));
   }
 
   setUserDataFromService(userData: IUserModel): void {

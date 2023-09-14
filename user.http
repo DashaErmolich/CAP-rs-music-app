@@ -1,0 +1,14 @@
+@server = http://localhost:4006
+
+GET {{server}}/user/Favourites
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+###
+POST {{server}}/user/Favourites
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+Content-Type: application/json
+
+{
+    "id": 78,
+    "type": "radio"
+}
