@@ -3,9 +3,9 @@
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "/test/(.*)",
+      "source": "/deezer/(.*)",
       "target": "/$1",
-      "destination": "DeezerArtists",
+      "destination": "DeezerAPI",
       "authenticationType": "xsuaa",
       "csrfProtection": false
     },
