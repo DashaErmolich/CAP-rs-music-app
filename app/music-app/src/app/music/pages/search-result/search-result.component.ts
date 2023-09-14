@@ -332,7 +332,7 @@ export class SearchResultComponent extends RandomColorHelper implements OnInit, 
           this.typeToShow = 'search.results.custom-playlist';
           this.descriptionTitle = 'search.results.description.playlist.creator';
           this.descriptionSubTitle = 'search.results.description.playlist.songs';
-          this.imgSrc = '../../../../assets/icons/note.svg';
+          this.imgSrc = 'assets/icons/note.svg';
           this.title = playlist.title;
           playlist.tracks.data.forEach((track) => {
             this.tracks$ = this.deezerRestApiService.getTrack(track).subscribe((data) => {

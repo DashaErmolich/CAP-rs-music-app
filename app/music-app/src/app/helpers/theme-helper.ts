@@ -14,8 +14,8 @@ export class ThemeHelper {
 
   getLogoIconPath(): string {
     return this.myTheme.isThemeDark
-      ? '../../../assets/icons/sprite.svg#app-logo'
-      : '../../../assets/icons/sprite.svg#app-logo-dark';
+      ? 'assets/icons/sprite.svg#app-logo'
+      : 'assets/icons/sprite.svg#app-logo-dark';
   }
 
   getColorClassName(type: string = 'primary'): string {
@@ -24,7 +24,7 @@ export class ThemeHelper {
 
   getRssLogoIconPath(): string {
     return this.myTheme.isThemeDark
-      ? '../../assets/icons/rs_school_js.svg'
-      : '../../assets/icons/rs_school_js_dark.svg';
+      ? 'assets/icons/rs_school_js.svg'
+      : 'assets/icons/rs_school_js_dark.svg';
   }
 }
