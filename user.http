@@ -4,11 +4,15 @@ GET {{server}}/user/Favourites
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 
 ###
+GET {{server}}/user/Favourites?$filter=type_ID eq 1
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+###
 POST {{server}}/user/Favourites
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 Content-Type: application/json
 
 {
-    "id": 78,
-    "type": "radio"
+    "id": 71,
+    "type_ID": "1"
 }

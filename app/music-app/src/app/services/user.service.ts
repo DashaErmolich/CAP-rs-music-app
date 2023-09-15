@@ -11,7 +11,7 @@ export class UserService {
     private http: HttpClient,
   ) { }
 
-  setUserFavourites(id: number, type: 'radio' | 'song' | 'playlist', ): Observable<any> {
+  setUserFavourites(id: number, type: 'radio' | 'song' | 'playlist' ): Observable<any> {
     return this.http.post('user/Favourites', { id: id, type: type })
   }
 }
