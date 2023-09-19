@@ -9,7 +9,7 @@ import { ITrackListInfo } from '../models/audio-player.models';
 import { UtilsService } from './utils.service';
 import { ICustomPlaylistModel } from '../models/user-model.models';
 import { AudioService } from './audio.service';
-import { UserService } from './user.service';
+import { FavouritesTypes, UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -167,7 +167,7 @@ export class StateService {
       this.user = res;
     });
 
-    this.userService.setUserFavourites(666, 'song').subscribe(() => console.log('song setted'), (err) => console.log(err));
+    this.userService.setUserFavourites(666, FavouritesTypes.Track).subscribe(() => console.log('track setted'), (err) => console.log(err));
   }
 
   setUserDataFromService(userData: IUserModel): void {

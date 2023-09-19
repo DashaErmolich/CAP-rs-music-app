@@ -66,3 +66,13 @@ Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 ###
 GET {{server}}/app/Personalizations
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+
+### LIKE!
+POST {{server}}/app/like
+Content-Type: application/json
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+{
+    "typeID": 2
+}
