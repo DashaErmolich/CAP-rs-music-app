@@ -1,0 +1,74 @@
+@server = http://localhost:4004
+
+GET {{server}}/app/Favourites
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+###
+GET {{server}}/app/Favourites?$filter=itemType_id eq 3
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+###
+POST {{server}}/app/Favourites
+Content-Type: application/json
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+{
+    "itemID": 11998911,
+    "itemType_id": 6
+}
+
+### ADD FAVOURITE
+POST {{server}}/app/Favourites
+Content-Type: application/json
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+{
+    "itemID": 4444,
+    "itemType_id": 1
+}
+
+### REMOVE FAVOURITE
+DELETE {{server}}/app/Favourites(itemID=4444,itemType_id=1,parent_id='dasha.ermolich@gmail.com')
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+
+
+### CREATE CUSOM PLAYLIST ID 0dde954b-d95e-481f-b1d7-a86285b3d6c1
+POST {{server}}/app/CustomPlaylists
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+Content-Type: application/json
+
+{
+    "title": "My Playlist 1"
+}
+
+
+### ADD TRACK TO CUSTOM PLAYLIST ID 0dde954b-d95e-481f-b1d7-a86285b3d6c1
+POST {{server}}/app/CustomPlaylists(0dde954b-d95e-481f-b1d7-a86285b3d6c1)/tracks
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+Content-Type: application/json
+
+{
+    "trackID" : 3435464
+    
+}
+
+### UPDATE PERSONALISATION
+PATCH  {{server}}/app/Personalizations('dasha.ermolich@gmail.com')
+Content-Type: application/json
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+{
+    "iconID": 3
+}
+
+###
+POST {{server}}/app/Personalizations
+Content-Type: application/json
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+{}
+
+###
+GET {{server}}/app/Personalizations
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==

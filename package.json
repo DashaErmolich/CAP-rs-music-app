@@ -11,7 +11,7 @@
     "@sap/html5-app-deployer": "^5.0.0",
     "@sap/xssec": "^3",
     "express": "^4",
-    "passport": "^0.6.0",
+    "passport": "^0",
     "rimraf": "^5.0.1"
   },
   "devDependencies": {
@@ -23,13 +23,11 @@
   "scripts": {
     "start": "cds-serve",
     "watch:hybrid": "cds watch --profile hybrid",
+    "hana-deploy:hybrid-undeploy": "cds deploy --to hana --profile hybrid --auto-undeploy",
     "hana-deploy:hybrid": "cds deploy --to hana --profile hybrid",
     "clean": "npx rimraf mta_archives resources",
     "build": "npm run clean && mbt build",
-    "deploy": "cf deploy mta_archives/btp-webapp_1.0.0.mtar",
-    "build-btp": "npm run clean-btp && ng build --configuration production && npm run zip",
-    "zip": "cd dist/ && npx bestzip ../music-app-content.zip * ../manifest.json",
-    "clean-btp": "npx rimraf music-app-content.zip dist"
+    "deploy": "cf deploy mta_archives/cap-rs-music-app_1.0.0.mtar"
   },
   "cds": {
     "requires": {

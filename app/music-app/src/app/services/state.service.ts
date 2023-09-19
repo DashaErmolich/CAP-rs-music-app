@@ -9,6 +9,7 @@ import { ITrackListInfo } from '../models/audio-player.models';
 import { UtilsService } from './utils.service';
 import { ICustomPlaylistModel } from '../models/user-model.models';
 import { AudioService } from './audio.service';
+import { FavouritesTypes, UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -57,6 +58,7 @@ export class StateService {
     private authService: AuthorizationApiService,
     private myUtils: UtilsService,
     private myAudio: AudioService,
+    private userService: UserService,
   ) {
     const trackListInfo: ITrackListInfo | null = this.storage.getTrackListInfo();
     this.updateState();
@@ -106,6 +108,7 @@ export class StateService {
     likedTracks.push(trackDeezerId);
     this.likedTracks$.next(likedTracks);
     this.updateUserData();
+    this.userService.addToFavourites(trackDeezerId, FavouritesTypes.Track);
   }
 
   removeLikedTrack(trackDeezerId: number): void {
@@ -116,6 +119,7 @@ export class StateService {
     }
     this.likedTracks$.next(likedTracks);
     this.updateUserData();
+    this.userService.removeFromFavourites(trackDeezerId, FavouritesTypes.Track);
   }
 
   setNavigationMenuVisibility(isVisible: boolean): void {

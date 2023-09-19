@@ -1,6 +1,6 @@
 export const CORS_DEV = 'http://localhost:8080/';
 export const CORS_PROD = 'https://music-app-deezer-proxy.onrender.com/';
-export const BASE_URL = `${CORS_PROD}https://api.deezer.com`;
+export const BASE_URL = `deezer`;
 export const DEFAULT_SRC = 'https://e-cdns-images.dzcdn.net/images/misc//56x56-000000-80-0-0.jpg';
 export const delayTimeout = 0;
 export const SERVER_DEV_URL = 'http://localhost:6060/api';

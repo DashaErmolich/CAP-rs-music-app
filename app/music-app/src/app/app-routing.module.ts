@@ -21,12 +21,12 @@ import { CreatedPlaylistsComponent } from './music/pages/created-playlists/creat
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/welcome', pathMatch: 'full' },
-  { path: 'welcome', component: WelcomeComponent },
+  { path: '', redirectTo: '/music', pathMatch: 'full' },
+  // { path: 'welcome', component: WelcomeComponent },
   {
     path: 'music',
     component: MusicPageComponent,
-    canActivateChild: [AuthorizedGuard],
+    // canActivateChild: [AuthorizedGuard],
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
@@ -46,7 +46,7 @@ const routes: Routes = [
   {
     path: 'settings',
     component: SettingsPageComponent,
-    canActivateChild: [AuthorizedGuard],
+    // canActivateChild: [AuthorizedGuard],
     children: [
       { path: '', redirectTo: 'language', pathMatch: 'full' },
       { path: 'language', component: SettingsLanguageComponent },
@@ -54,8 +54,8 @@ const routes: Routes = [
       { path: 'account', component: SettingsAccountComponent },
     ],
   },
-  { path: 'sign-in', component: SignInComponent },
-  { path: 'sign-up', component: SignUpComponent },
+  // { path: 'sign-in', component: SignInComponent },
+  // { path: 'sign-up', component: SignUpComponent },
   { path: '**', component: NotFoundComponent },
 ];
 

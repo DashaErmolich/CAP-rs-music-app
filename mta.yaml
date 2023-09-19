@@ -1,4 +1,3 @@
----
 _schema-version: '3.1'
 ID: cap-rs-music-app
 version: 1.0.0
@@ -9,9 +8,9 @@ build-parameters:
   before-all:
     - builder: custom
       commands:
-      - npm install --production
-      - npx -p @sap/cds-dk cds build --production
-      - npx rimraf gen/db/src/gen/data
+        - npm install --production
+        - npx -p @sap/cds-dk cds build --production
+        - npx rimraf gen/db/src/gen/data
 
 modules:
   - name: cap-rs-music-app-srv
@@ -25,7 +24,7 @@ modules:
       - name: srv-api # required by consumers of CAP services (e.g. approuter)
         properties:
           srv-url: ${default-url}
-    requires: 
+    requires:
       - name: cap-rs-music-app-auth
       - name: cap-rs-music-app-db
       - name: cap-rs-music-app-destination
@@ -34,45 +33,45 @@ modules:
     type: hdb
     path: gen/db
     requires:
-    - name: cap-rs-music-app-db
-    - name: cap-rs-music-app-auth
+      - name: cap-rs-music-app-db
+      - name: cap-rs-music-app-auth
     parameters:
       buildpack: nodejs_buildpack
 
   - name: cap-rs-music-app-destinations
     type: com.sap.application.content
     requires:
-    - name: cap-rs-music-app-auth
-      parameters:
-        service-key:
-          name: cap-rs-music-app-auth-key
-    - name: cap-rs-music-app-html5-repo-host
-      parameters:
-        service-key:
-          name: cap-rs-music-app-html5-repo-host-key
-    - name: srv-api
-    - name: cap-rs-music-app-destination
-      parameters:
-        content-target: true
+      - name: cap-rs-music-app-auth
+        parameters:
+          service-key:
+            name: cap-rs-music-app-auth-key
+      - name: cap-rs-music-app-html5-repo-host
+        parameters:
+          service-key:
+            name: cap-rs-music-app-html5-repo-host-key
+      - name: srv-api
+      - name: cap-rs-music-app-destination
+        parameters:
+          content-target: true
     parameters:
       content:
         instance:
           destinations:
-          - Authentication: OAuth2UserTokenExchange
-            Name: cap-rs-music-app-srv
-            TokenServiceInstanceName: cap-rs-music-app-auth
-            TokenServiceKeyName: cap-rs-music-app-auth-key
-            URL: ~{srv-api/srv-url}
-            sap.cloud.service: cap-rs-music-app
-          - Name: cap-rs-music-app-html5-repo-host
-            ServiceInstanceName: cap-rs-music-app-html5-repo-host
-            ServiceKeyName: cap-rs-music-app-html5-repo-host-key
-            sap.cloud.service: cap-rs-music-app
-          - Authentication: OAuth2UserTokenExchange
-            Name: cap-rs-music-app-auth
-            ServiceInstanceName: cap-rs-music-app-auth
-            ServiceKeyName: cap-rs-music-app-auth-key
-            sap.cloud.service: cap-rs-music-app
+            - Authentication: OAuth2UserTokenExchange
+              Name: cap-rs-music-app-srv
+              TokenServiceInstanceName: cap-rs-music-app-auth
+              TokenServiceKeyName: cap-rs-music-app-auth-key
+              URL: ~{srv-api/srv-url}
+              sap.cloud.service: cap-rs-music-app
+            - Name: cap-rs-music-app-html5-repo-host
+              ServiceInstanceName: cap-rs-music-app-html5-repo-host
+              ServiceKeyName: cap-rs-music-app-html5-repo-host-key
+              sap.cloud.service: cap-rs-music-app
+            - Authentication: OAuth2UserTokenExchange
+              Name: cap-rs-music-app-auth
+              ServiceInstanceName: cap-rs-music-app-auth
+              ServiceKeyName: cap-rs-music-app-auth-key
+              sap.cloud.service: cap-rs-music-app
           existing_destinations_policy: update
     build-parameters:
       no-source: true
@@ -81,17 +80,17 @@ modules:
     type: com.sap.application.content
     path: .
     requires:
-    - name: cap-rs-music-app-html5-repo-host
-      parameters:
-        content-target: true
+      - name: cap-rs-music-app-html5-repo-host
+        parameters:
+          content-target: true
     build-parameters:
       build-result: resources
       requires:
-      - artifacts:
-        - music-app-content.zip
-        name: music-app
-        target-path: resources/
-        
+        - artifacts:
+            - music-app-content.zip
+          name: music-app
+          target-path: resources/
+
   - name: music-app
     type: html5
     path: app/music-app
@@ -99,9 +98,10 @@ modules:
       build-result: dist
       builder: custom
       commands:
-      - npm install
-      - npm run build
-      supported-platforms: []
+        - npm install
+        - npm run build
+      supported-platforms:
+        []
 
 resources:
   - name: cap-rs-music-app-db
@@ -112,7 +112,7 @@ resources:
     properties:
       hdi-service-name: ${service-name}
 
-  - name: cap-rs-music-app-auth 
+  - name: cap-rs-music-app-auth
     type: org.cloudfoundry.managed-service
     parameters:
       config:
@@ -121,6 +121,7 @@ resources:
       path: ./xs-security.json
       service: xsuaa
       service-plan: application
+
   - name: cap-rs-music-app-destination
     type: org.cloudfoundry.managed-service
     parameters:
@@ -129,9 +130,10 @@ resources:
         version: 1.0.0
       service: destination
       service-plan: lite
+
   - name: cap-rs-music-app-html5-repo-host
     type: org.cloudfoundry.managed-service
     parameters:
       service: html5-apps-repo
       service-plan: app-host
-      service-name: cap-rs-music-app-html5-repo-host 
+      service-name: cap-rs-music-app-html5-repo-host
