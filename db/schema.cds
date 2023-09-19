@@ -22,7 +22,7 @@ entity Personalizations {
 
 entity Favourites {
     key parent_id : type of Personalizations : id;
-    key itemID    : Integer;
+    key itemID    : Integer64;
     key itemType  : Association to FavouritesTypes @assert.range: [
                         1,
                         3

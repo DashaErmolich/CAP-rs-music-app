@@ -23,9 +23,15 @@ Content-Type: application/json
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 
 {
-    "itemID": 117611,
+    "itemID": 4444,
     "itemType_id": 1
 }
+
+### REMOVE FAVOURITE
+DELETE {{server}}/app/Favourites(itemID=4444,itemType_id=1,parent_id='dasha.ermolich@gmail.com')
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+
 
 ### CREATE CUSOM PLAYLIST ID 0dde954b-d95e-481f-b1d7-a86285b3d6c1
 POST {{server}}/app/CustomPlaylists
@@ -48,7 +54,7 @@ Content-Type: application/json
 }
 
 ### UPDATE PERSONALISATION
-PATCH  {{server}}/app/Personalizations('.ermolich@gmail.com')
+PATCH  {{server}}/app/Personalizations('dasha.ermolich@gmail.com')
 Content-Type: application/json
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 
@@ -66,13 +72,3 @@ Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 ###
 GET {{server}}/app/Personalizations
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
-
-
-### LIKE!
-POST {{server}}/app/like
-Content-Type: application/json
-Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
-
-{
-    "typeID": 2
-}

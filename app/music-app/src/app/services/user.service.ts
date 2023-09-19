@@ -1,23 +1,55 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 
 export enum FavouritesTypes {
-  Track,
-  Playlist,
-  Radio
+  Track = 1,
+  Playlist = 2,
+  Radio = 3
+}
+
+export interface UserPersonalization {
+  id: string;
+  username: string;
+  isActivated: boolean;
+  iconID: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  personalization!: UserPersonalization;
+
   constructor(
     private http: HttpClient,
-  ) { }
+  ) {
+    this.setPersonalization();
+  }
 
-  setUserFavourites(id: number, typeID: FavouritesTypes): Observable<any> {
-    this.http.post('app/like', { typeID: typeID });
-    return this.http.post('app/Favourites', { itemID: id, itemType_id: typeID })
+  setPersonalization() {
+    this.http.get('app/Personalizations').subscribe((res) => {
+      const response = (res as {value: UserPersonalization[]});
+      if (response.value.length) {
+        this.personalization = response.value[0];
+        console.log(this.personalization)
+      } else {
+        this.http.post('app/Personalizations', {}).pipe(
+          switchMap(() => this.http.get('app/Personalizations'))
+        ).subscribe((res1) => {
+          const response = (res1 as {value: UserPersonalization[]});
+          this.personalization = response.value[0];
+        })
+      }
+    }
+    );
+  }
+
+  addToFavourites(id: number, typeID: FavouritesTypes) {
+    this.http.post('app/Favourites', { itemID: id, itemType_id: typeID }).subscribe()
+  }
+
+  removeFromFavourites(id: number, typeID: FavouritesTypes) {
+    this.http.delete(`app/Favourites(itemID=${id},itemType_id=${typeID},parent_id=${this.personalization.id}`).subscribe();
   }
 }

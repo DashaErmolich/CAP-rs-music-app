@@ -108,6 +108,7 @@ export class StateService {
     likedTracks.push(trackDeezerId);
     this.likedTracks$.next(likedTracks);
     this.updateUserData();
+    this.userService.addToFavourites(trackDeezerId, FavouritesTypes.Track);
   }
 
   removeLikedTrack(trackDeezerId: number): void {
@@ -118,6 +119,7 @@ export class StateService {
     }
     this.likedTracks$.next(likedTracks);
     this.updateUserData();
+    this.userService.removeFromFavourites(trackDeezerId, FavouritesTypes.Track);
   }
 
   setNavigationMenuVisibility(isVisible: boolean): void {
@@ -166,8 +168,6 @@ export class StateService {
     this.authService.setUser(updatedUser).subscribe((res) => {
       this.user = res;
     });
-
-    this.userService.setUserFavourites(666, FavouritesTypes.Track).subscribe(() => console.log('track setted'), (err) => console.log(err));
   }
 
   setUserDataFromService(userData: IUserModel): void {
