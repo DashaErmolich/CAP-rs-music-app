@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BASE_URL } from '../constants/constants';
+// import { BASE_URL } from '../constants/constants';
+import { environment } from 'src/environments/environment';
 import { Endpoints } from '../enums/endpoints';
 import {
   IAlbumResponse,
@@ -21,6 +22,8 @@ import {
   IRadiosResponse,
   ITracksByRadio,
 } from '../models/api-response.models';
+
+const BASE_URL = environment.deezerUrl;
 
 @Injectable({
   providedIn: 'root',

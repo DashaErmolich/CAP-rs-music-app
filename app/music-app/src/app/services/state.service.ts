@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { IUserModel } from 'src/app/models/user-model.models';
-import { AuthorizationApiService } from './authorization-api.service';
+// import { AuthorizationApiService } from './authorization-api.service';
 import { ITrackResponse } from '../models/api-response.models';
 import { ILikedSearchResults, LikedSearchResults } from '../models/search.models';
 import { LocalStorageService } from './local-storage.service';
@@ -55,13 +55,13 @@ export class StateService {
 
   constructor(
     private storage: LocalStorageService,
-    private authService: AuthorizationApiService,
+    // private authService: AuthorizationApiService,
     private myUtils: UtilsService,
     private myAudio: AudioService,
     private userService: UserService,
   ) {
     const trackListInfo: ITrackListInfo | null = this.storage.getTrackListInfo();
-    this.updateState();
+    // this.updateState();
 
     if (trackListInfo !== null) {
       this.setTrackListInfo(trackListInfo.trackList, trackListInfo.currentTrackIndex);
@@ -165,9 +165,9 @@ export class StateService {
       radio: this.likedSearchResults$.value.radio,
     };
     updatedUser.customPlaylists = this.customPlaylists$.value;
-    this.authService.setUser(updatedUser).subscribe((res) => {
-      this.user = res;
-    });
+    // this.authService.setUser(updatedUser).subscribe((res) => {
+    //   this.user = res;
+    // });
   }
 
   setUserDataFromService(userData: IUserModel): void {
@@ -182,15 +182,15 @@ export class StateService {
     this.customPlaylists$.next(userData.customPlaylists);
   }
 
-  updateState() {
-    this.authService.getUser().subscribe((data) => {
-      if (!this.myUtils.isEmptyObject(data)) {
-        this.user = data as IUserModel;
-        this.isAuthorized = true;
-        this.setUserDataFromService(this.user);
-      }
-    });
-  }
+  // updateState() {
+  //   this.authService.getUser().subscribe((data) => {
+  //     if (!this.myUtils.isEmptyObject(data)) {
+  //       this.user = data as IUserModel;
+  //       this.isAuthorized = true;
+  //       this.setUserDataFromService(this.user);
+  //     }
+  //   });
+  // }
 
   setCurrentTrackListVisibility(isVisible: boolean) {
     this.isCurrentTrackListShown$.next(isVisible);

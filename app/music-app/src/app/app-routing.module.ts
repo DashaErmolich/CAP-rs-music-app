@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NotFoundComponent } from './core/not-found/not-found.component';
-import { WelcomeComponent } from './core/welcome/welcome.component';
-import { SignInComponent } from './user/sign-in/sign-in.component';
-import { SignUpComponent } from './user/sign-up/sign-up.component';
+// import { WelcomeComponent } from './core/welcome/welcome.component';
+// import { SignInComponent } from './user/sign-in/sign-in.component';
+// import { SignUpComponent } from './user/sign-up/sign-up.component';
 import { MusicPageComponent } from './music/music-page/music-page.component';
 import { HomeComponent } from './music/pages/home/home.component';
 import { SearchComponent } from './music/pages/search/search.component';
@@ -15,10 +16,9 @@ import { SettingsAccountComponent } from './user/settings/settings-account/setti
 import { GenreComponent } from './music/pages/genre/genre.component';
 import { LikedTracksComponent } from './music/pages/liked-tracks/liked-tracks.component';
 import { SearchResultComponent } from './music/pages/search-result/search-result.component';
-import { AuthorizedGuard } from './guards/isAuthorized.guard';
+// import { AuthorizedGuard } from './guards/isAuthorized.guard';
 import { CustomPlaylistComponent } from './music/pages/custom-playlist/custom-playlist.component';
 import { CreatedPlaylistsComponent } from './music/pages/created-playlists/created-playlists.component';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const routes: Routes = [
   { path: '', redirectTo: '/music', pathMatch: 'full' },

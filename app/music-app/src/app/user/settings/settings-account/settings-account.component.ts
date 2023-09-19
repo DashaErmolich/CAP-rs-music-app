@@ -10,7 +10,7 @@ import { IUserIcons } from '../../../models/user-icons.models';
 import { ThemeHelper } from '../../../helpers/theme-helper';
 import { StateService } from '../../../services/state.service';
 import { ThemeService } from '../../../services/theme.service';
-import { AuthorizationService } from '../../../services/authorization.service';
+// import { AuthorizationService } from '../../../services/authorization.service';
 import { USER_NAME_MIN_LENGTH, USER_NAME_MAX_LENGTH } from '../../../constants/constants';
 
 @Component({
@@ -45,10 +45,10 @@ export class SettingsAccountComponent extends ThemeHelper implements OnInit, OnD
   constructor(
     private myState: StateService,
     private snackBar: MatSnackBar,
-    private authServe: AuthorizationService,
+    // private authServe: AuthorizationService,
     private router: Router,
     myTheme: ThemeService,
-    private muAuth: AuthorizationService,
+    // private muAuth: AuthorizationService,
     private myRouter: Router,
   ) {
     super(myTheme);
@@ -97,7 +97,7 @@ export class SettingsAccountComponent extends ThemeHelper implements OnInit, OnD
   submitLogout() {
     this.isUserNameChanged$.next(false);
     this.isUserIconChanged$.next(false);
-    this.muAuth.logout();
+    // this.muAuth.logout();
 
     localStorage.removeItem('trackList');
     localStorage.removeItem('volume');
@@ -107,7 +107,7 @@ export class SettingsAccountComponent extends ThemeHelper implements OnInit, OnD
     this.snackBar.open(this._snackbarPlaceholder, '🔑', {
       duration: 3000,
     });
-    this.authServe.logout();
+    // this.authServe.logout();
     setTimeout(() => {
       this.router.navigate(['welcome']);
     }, 1000);
