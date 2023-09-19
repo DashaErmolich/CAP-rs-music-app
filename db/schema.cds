@@ -1,35 +1,48 @@
-namespace user;
-using { User } from '@sap/cds/common.cds';
-using { cuid } from '@sap/cds/common';
+using {User} from '@sap/cds/common.cds';
+using {
+    cuid,
+    managed
+} from '@sap/cds/common';
+
+namespace music.app;
+
+entity Personalizations {
+    key id              : User              @cds.on.insert: $user;
+        username        : String default 'username';
+        isActivated     : Boolean default true;
+        iconID          : Integer default 1 @assert.range : [
+            1,
+            10
+        ];
+        favorites       : Composition of many Favourites
+                              on favorites.parent = $self;
+        customPlaylists : Composition of many CustomPlaylists
+                              on customPlaylists.createdBy = $self.id;
+}
 
 entity Favourites {
-    key userID: User @cds.on.insert : $user;
-    key id: Integer;
-    key type_ID : Int16;
-    type: Association to FavouritesTypes on type.ID = type_ID;
+    key parent_id : type of Personalizations : id;
+    key itemID    : Integer;
+    key itemType  : Association to FavouritesTypes @assert.range: [
+                        1,
+                        3
+                    ];
+        parent    : Association to Personalizations
+                        on parent.id = parent_id;
 }
 
 entity FavouritesTypes {
-    key ID: Int16;
-    name: String;
+    key id   : Int16;
+        name : String;
 }
 
-entity Info {
-    key id: User @cds.on.insert : $user;
-    username: User @cds.on.insert : $user;
-    isActivated: Boolean default true;
-    userIconId: Integer;
-    userFavorites: Association to many Favourites on userFavorites.userID = $self.id;
-    customPlaylists: Association to many CustomPlaylist on customPlaylists.creator = $self.id;
+entity CustomPlaylists : cuid, managed {
+    title  : String;
+    tracks : Composition of many CustomPlayliststTracks
+                 on tracks.parent = $self;
 }
 
 entity CustomPlayliststTracks {
-    key playlist_ID: UUID;
-    key trackID: Integer;
-}
-
-entity CustomPlaylist: cuid {
-    creator: User @cds.on.insert : $user;
-    title: String;
-    tracks: Association to many CustomPlayliststTracks on tracks.playlist_ID = $self.ID;
+    key parent  : Association to CustomPlaylists;
+    key trackID : Integer;
 }

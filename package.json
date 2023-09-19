@@ -23,6 +23,7 @@
   "scripts": {
     "start": "cds-serve",
     "watch:hybrid": "cds watch --profile hybrid",
+    "hana-deploy:hybrid-undeploy": "cds deploy --to hana --profile hybrid --auto-undeploy",
     "hana-deploy:hybrid": "cds deploy --to hana --profile hybrid",
     "clean": "npx rimraf mta_archives resources",
     "build": "npm run clean && mbt build",

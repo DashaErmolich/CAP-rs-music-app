@@ -121,6 +121,7 @@ resources:
       path: ./xs-security.json
       service: xsuaa
       service-plan: application
+
   - name: cap-rs-music-app-destination
     type: org.cloudfoundry.managed-service
     parameters:
@@ -129,6 +130,7 @@ resources:
         version: 1.0.0
       service: destination
       service-plan: lite
+      
   - name: cap-rs-music-app-html5-repo-host
     type: org.cloudfoundry.managed-service
     parameters:

@@ -1,18 +1,68 @@
-@server = http://localhost:4006
+@server = http://localhost:4004
 
-GET {{server}}/user/Favourites
+GET {{server}}/app/Favourites
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 
 ###
-GET {{server}}/user/Favourites?$filter=type_ID eq 1
+GET {{server}}/app/Favourites?$filter=itemType_id eq 3
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 
 ###
-POST {{server}}/user/Favourites
+POST {{server}}/app/Favourites
+Content-Type: application/json
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+{
+    "itemID": 11998911,
+    "itemType_id": 6
+}
+
+###
+POST {{server}}/app/Favourites
+Content-Type: application/json
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+{
+    "itemID": 117611,
+    "itemType_id": 1
+}
+
+###
+POST {{server}}/app/CustomPlaylists
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 Content-Type: application/json
 
 {
-    "id": 71,
-    "type_ID": "1"
+    "title": "My Playlist 1"
 }
+
+
+###
+POST {{server}}/app/CustomPlaylists(16b872fe-eceb-403d-a3c9-d3671e500ed8)/tracks
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+Content-Type: application/json
+
+{
+    "trackID" : 4324234
+    
+}
+
+###
+PATCH  {{server}}/app/Personalizations('dasha.ermolich@gmail.com')
+Content-Type: application/json
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+{
+    "iconID": 3
+}
+
+###
+POST {{server}}/app/Personalizations
+Content-Type: application/json
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+{}
+
+###
+GET {{server}}/app/Personalizations
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
