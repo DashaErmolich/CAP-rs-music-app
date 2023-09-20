@@ -35,7 +35,7 @@
           <button *ngIf="!isHandset" mat-fab extended color="basic">
             <mat-icon>
               <svg class="icon">
-                <use attr.xlink:href="{{ userIconsPath[userIconId] }}"></use>
+                <use attr.xlink:href="{{ userIconsPath[userIconId - 1] }}"></use>
               </svg>
             </mat-icon>
             {{ userName}}
@@ -43,7 +43,7 @@
           <button *ngIf="isHandset" mat-icon-button color="basic" class="user-icon_handset">
             <mat-icon>
               <svg class="icon">
-                <use attr.xlink:href="{{ userIconsPath[userIconId] }}"></use>
+                <use attr.xlink:href="{{ userIconsPath[userIconId - 1] }}"></use>
               </svg>
             </mat-icon>
           </button>

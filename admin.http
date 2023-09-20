@@ -79,14 +79,18 @@ Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
     "iconID": 3
 }
 
-###
+### CREATE PERSONALIZATION
 POST {{server}}/app/Personalizations
 Content-Type: application/json
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 
 {}
 
-###
+### DELETE PERSONALIZATION
+DELETE {{server}}/app/Personalizations('dasha.ermolich@gmail.com')
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+### GET PERSONALIZATION
 GET {{server}}/app/Personalizations
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 

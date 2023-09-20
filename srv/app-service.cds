@@ -6,7 +6,6 @@ service AppService @(requires: 'authenticated-user') {
     entity Personalizations as projection on my.Personalizations where id = $user;
     entity CustomPlaylists as projection on my.CustomPlaylists where createdBy = $user;
     entity CustomPlayliststTracks as projection on my.CustomPlayliststTracks;
-    action like(typeID: Int16);
 }
 
 @path: '/admin'

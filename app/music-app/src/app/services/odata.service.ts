@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  Observable, map,
+  Observable, iif, map, of, switchMap,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { API_PATHS } from '../enums/srv-paths.enum';
@@ -32,8 +32,14 @@ export class ODataService {
     private http: HttpClient,
   ) {}
 
-  setInitPersonalizations(): void {
-    this.http.post(`${environment.apiUrl}${API_PATHS.PERSONALIZATIONS}`, {});
+  getPersonalizationsResponse(): Observable<CommonResponse> {
+    return this.http.get<CommonResponse>(`${environment.apiUrl}${API_PATHS.PERSONALIZATIONS}`);
+  }
+
+  setInitPersonalizations(): Observable<CommonResponse> {
+    return this.http.post(`${environment.apiUrl}${API_PATHS.PERSONALIZATIONS}`, {}).pipe(
+      switchMap(() => this.getPersonalizationsResponse()),
+    );
   }
 
   getPersonalizations(): Observable<PersonalizationsResponse> {
@@ -41,7 +47,9 @@ export class ODataService {
     return this.http
       .get<CommonResponse>(url)
       .pipe(
-        map((res: CommonResponse) => res.value[0] as PersonalizationsResponse),
+        // eslint-disable-next-line max-len
+        switchMap((res: CommonResponse) => iif(() => !res.value[0], this.setInitPersonalizations(), of(res))),
+        map((res) => res.value[0] as PersonalizationsResponse),
       );
   }
 

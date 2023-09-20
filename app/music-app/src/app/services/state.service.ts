@@ -32,7 +32,7 @@ export class StateService {
 
   userName$ = new BehaviorSubject<string>('');
 
-  userIconId$ = new BehaviorSubject<number>(11);
+  userIconId$ = new BehaviorSubject<number>(12);
 
   searchValue$ = new BehaviorSubject<string>('');
 
@@ -70,11 +70,12 @@ export class StateService {
       this.setTrackListInfo(trackListInfo.trackList, trackListInfo.currentTrackIndex);
     }
 
-    userService.getPersonalizations().subscribe((res: PersonalizationsResponse) => {
-      this.newUser = res;
-      this.userName$.next(res.username);
-      this.userIconId$.next(res.iconID);
-    });
+    userService.getPersonalizations()
+      .subscribe((res: PersonalizationsResponse) => {
+        this.newUser = res;
+        this.userName$.next(res.username);
+        this.userIconId$.next(res.iconID);
+      });
 
     userService.getFavorites().subscribe((res: FavoritesResponse[]) => {
       this.likedTracks$.next(res

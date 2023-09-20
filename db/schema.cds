@@ -8,11 +8,11 @@ namespace music.app;
 
 entity Personalizations {
     key id              : User              @cds.on.insert: $user;
-        username        : String default 'username';
+        username        : String default 'User';
         isActivated     : Boolean default true;
-        iconID          : Integer default 1 @assert.range : [
+        iconID          : Integer @assert.range : [
             1,
-            10
+            11
         ];
         favorites       : Composition of many Favorites
                               on favorites.parent = $self;
