@@ -2,7 +2,7 @@ using music.app as my from '../db/schema';
 
 @path: '/app'
 service AppService @(requires: 'authenticated-user') {
-    entity Favourites as projection on my.Favourites where parent.id = $user;
+    entity Favorites as projection on my.Favorites where parent.id = $user;
     entity Personalizations as projection on my.Personalizations where id = $user;
     entity CustomPlaylists as projection on my.CustomPlaylists where createdBy = $user;
     entity CustomPlayliststTracks as projection on my.CustomPlayliststTracks;
@@ -11,9 +11,9 @@ service AppService @(requires: 'authenticated-user') {
 
 @path: '/admin'
 service AdminService @(requires: 'admin') {
-    entity Favourites as projection on my.Favourites;
+    entity Favorites as projection on my.Favorites;
     
-    entity FavouritesTypes as projection on my.FavouritesTypes;
+    entity FavoritesTypes as projection on my.FavoritesTypes;
     
     entity Personalizations as projection on my.Personalizations;
     

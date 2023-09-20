@@ -2,13 +2,11 @@ export interface CommonResponse {
   value: any[];
 }
 
-export interface PersonalizationsResponseFull {
+export interface PersonalizationsResponse {
   id: string;
   username: string;
   isActivated: boolean;
   iconID: number;
-  favorites: FavoritesResponse[];
-  customPlaylists: CustomPlaylistsResponse[];
 }
 
 export interface FavoritesResponse {
@@ -24,4 +22,10 @@ export interface CustomPlaylistsResponse {
   modifiedAt: string;
   modifiedBy: string;
   title: string;
+  tracks: TracksResponse[];
+}
+
+export interface TracksResponse {
+  parent_id: string;
+  trackID: number;
 }

@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { IUserModel } from 'src/app/models/user-model.models';
+import { Router } from '@angular/router';
 import { ITrackResponse } from '../models/api-response.models';
 import { ILikedSearchResults, LikedSearchResults } from '../models/search.models';
 import { LocalStorageService } from './local-storage.service';
@@ -9,8 +10,8 @@ import { ITrackListInfo } from '../models/audio-player.models';
 import { UtilsService } from './utils.service';
 import { ICustomPlaylistModel } from '../models/user-model.models';
 import { AudioService } from './audio.service';
-import { FavoritesTypes, User, UserService } from './user.service';
-import { PersonalizationsResponseFull } from '../models/srv-response.models';
+import { FavoritesTypes, User, ODataService } from './odata.service';
+import { CustomPlaylistsResponse, FavoritesResponse, PersonalizationsResponse } from '../models/srv-response.models';
 
 @Injectable({
   providedIn: 'root',
@@ -60,7 +61,8 @@ export class StateService {
     private storage: LocalStorageService,
     private myUtils: UtilsService,
     private myAudio: AudioService,
-    private userService: UserService,
+    private userService: ODataService,
+    private myRouter: Router,
   ) {
     const trackListInfo: ITrackListInfo | null = this.storage.getTrackListInfo();
 
@@ -68,27 +70,44 @@ export class StateService {
       this.setTrackListInfo(trackListInfo.trackList, trackListInfo.currentTrackIndex);
     }
 
-    userService.getPersonalizationsFull().subscribe((res: PersonalizationsResponseFull) => {
+    userService.getPersonalizations().subscribe((res: PersonalizationsResponse) => {
       this.newUser = res;
-      this.likedTracks$.next(res.favorites
-        .filter((item) => item.itemType_id === FavoritesTypes.Track)
-        .map((item) => item.itemID));
       this.userName$.next(res.username);
       this.userIconId$.next(res.iconID);
+    });
+
+    userService.getFavorites().subscribe((res: FavoritesResponse[]) => {
+      this.likedTracks$.next(res
+        .filter((item) => item.itemType_id === FavoritesTypes.Track)
+        .map((item) => item.itemID));
       this.likedSearchResults$.next({
-        album: res.favorites
+        album: res
           .filter((item) => item.itemType_id === FavoritesTypes.Album)
           .map((item) => item.itemID),
-        artist: res.favorites
+        artist: res
           .filter((item) => item.itemType_id === FavoritesTypes.Artist)
           .map((item) => item.itemID),
-        playlist: res.favorites
+        playlist: res
           .filter((item) => item.itemType_id === FavoritesTypes.Playlist)
           .map((item) => item.itemID),
-        radio: res.favorites
+        radio: res
           .filter((item) => item.itemType_id === FavoritesTypes.Radio)
           .map((item) => item.itemID),
       });
+    });
+
+    this.userService.getCustomPlaylistsFull().subscribe((res: CustomPlaylistsResponse[]) => {
+      this.customPlaylists$.next(res.map((item: CustomPlaylistsResponse) => ({
+        id: item.ID,
+        title: item.title,
+        creator: {
+          name: item.createdBy,
+        },
+        tracks: {
+          data: item.tracks.map((track) => track.trackID),
+        },
+        nb_tracks: item.tracks.length,
+      })));
     });
   }
 
@@ -131,7 +150,6 @@ export class StateService {
     const likedTracks = this.likedTracks$.value;
     likedTracks.push(trackDeezerId);
     this.likedTracks$.next(likedTracks);
-    // this.updateUserData();
     this.userService.addToFavorites(trackDeezerId, FavoritesTypes.Track);
   }
 
@@ -161,7 +179,6 @@ export class StateService {
     const likedSearchResults = this.likedSearchResults$.value;
     likedSearchResults[type].push(id);
     this.likedSearchResults$.next(likedSearchResults);
-    // this.updateUserData();
     let typeID: number;
 
     switch (type) {
@@ -238,25 +255,27 @@ export class StateService {
     this.customPlaylists$.next(userData.customPlaylists);
   }
 
-  // updateState() {
-  //   this.authService.getUser().subscribe((data) => {
-  //     if (!this.myUtils.isEmptyObject(data)) {
-  //       this.user = data as IUserModel;
-  //       this.isAuthorized = true;
-  //       this.setUserDataFromService(this.user);
-  //     }
-  //   });
-  // }
-
   setCurrentTrackListVisibility(isVisible: boolean) {
     this.isCurrentTrackListShown$.next(isVisible);
   }
 
   setCustomPlaylist(playlist: ICustomPlaylistModel) {
     const customPlaylists: ICustomPlaylistModel[] = this.customPlaylists$.value;
-    customPlaylists.push(playlist);
-    this.customPlaylists$.next(customPlaylists);
-    this.updateUserData();
+    this.userService.createCustomPlaylist(playlist.title, playlist.tracks.data).subscribe((res) => {
+      customPlaylists.push({
+        id: res.ID,
+        title: res.title,
+        creator: {
+          name: res.createdBy,
+        },
+        tracks: {
+          data: res.tracks.map((item) => item.trackID),
+        },
+        nb_tracks: res.tracks.length,
+      });
+      this.customPlaylists$.next(customPlaylists);
+      this.myRouter.navigate([`music/user-play-list/${res.ID}`]);
+    });
   }
 
   deleteCustomPlaylist(playlistId: string) {
@@ -268,7 +287,7 @@ export class StateService {
       customPlaylists.splice(searchResultIndex, 1);
     }
     this.customPlaylists$.next(customPlaylists);
-    this.updateUserData();
+    this.userService.deleteCustomPlaylist(playlistId);
   }
 
   resetPlayingTrackList() {

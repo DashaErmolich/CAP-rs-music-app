@@ -45,7 +45,7 @@ import { environment } from 'src/environments/environment';
 export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const clone = request.clone({
-      params: request.params.set('Content-Type', 'application/json'),
+      headers: request.headers.set('Content-Type', 'application/json'),
     });
     if (!environment.production) {
       const devRequest = clone.clone({

@@ -53,6 +53,23 @@ Content-Type: application/json
     
 }
 
+### CREATE CUSOM PLAYLIST with tracks
+POST {{server}}/app/CustomPlaylists
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+Content-Type: application/json
+
+{
+    "title": "With tracks!!",
+    "tracks": [
+        {
+            "trackID": 77373737
+        },
+        {
+            "trackID": 453454
+        }
+    ] 
+}
+
 ### UPDATE PERSONALISATION
 PATCH  {{server}}/app/Personalizations('dasha.ermolich@gmail.com')
 Content-Type: application/json
@@ -71,4 +88,8 @@ Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 
 ###
 GET {{server}}/app/Personalizations
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+### DELETE CUSTOM PLAYLIST
+DELETE {{server}}/app/CustomPlaylists(a142ae3f-bce4-4653-b440-0f2d17f4ad25)
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==

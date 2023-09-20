@@ -14,16 +14,16 @@ entity Personalizations {
             1,
             10
         ];
-        favorites       : Composition of many Favourites
+        favorites       : Composition of many Favorites
                               on favorites.parent = $self;
         customPlaylists : Composition of many CustomPlaylists
                               on customPlaylists.createdBy = $self.id;
 }
 
-entity Favourites {
+entity Favorites {
     key parent_id : type of Personalizations : id;
     key itemID    : Integer64;
-    key itemType  : Association to FavouritesTypes @assert.range: [
+    key itemType  : Association to FavoritesTypes @assert.range: [
                         1,
                         5
                     ];
@@ -31,7 +31,7 @@ entity Favourites {
                         on parent.id = parent_id;
 }
 
-entity FavouritesTypes {
+entity FavoritesTypes {
     key id   : Int16;
         name : String;
 }
@@ -44,5 +44,5 @@ entity CustomPlaylists : cuid, managed {
 
 entity CustomPlayliststTracks {
     key parent  : Association to CustomPlaylists;
-    key trackID : Integer;
+    key trackID : Integer64;
 }
