@@ -1,15 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
+import {
+  Observable, map,
+} from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { API_PATHS } from '../enums/srv-paths.enum';
+import { CommonResponse, PersonalizationsResponseFull } from '../models/srv-response.models';
 
-export enum FavouritesTypes {
+export enum FavoritesTypes {
   Track = 1,
   Playlist = 2,
   Radio = 3,
+  Album = 4,
+  Artist = 5,
 }
 
-export interface UserPersonalization {
+export interface User {
   id: string;
   username: string;
   isActivated: boolean;
@@ -20,36 +26,32 @@ export interface UserPersonalization {
   providedIn: 'root',
 })
 export class UserService {
-  personalization!: UserPersonalization;
+  user!: User;
+
+  likedTracks!: number[];
 
   constructor(
     private http: HttpClient,
-  ) {
-    this.setPersonalization();
+  ) {}
+
+  setInitPersonalizations(): void {
+    this.http.post(`${environment.apiUrl}${API_PATHS.PERSONALIZATIONS}`, {});
   }
 
-  setPersonalization() {
-    this.http.get(`${environment.apiUrl}app/Personalizations`).subscribe((res) => {
-      const response = (res as { value: UserPersonalization[] });
-      if (response.value.length) {
-        this.personalization = response.value[0];
-        console.log(this.personalization);
-      } else {
-        this.http.post(`${environment.apiUrl}app/Personalizations`, {}).pipe(
-          switchMap(() => this.http.get(`${environment.apiUrl}app/Personalizations`)),
-        ).subscribe((res1) => {
-          const response = (res1 as { value: UserPersonalization[] });
-          this.personalization = response.value[0];
-        });
-      }
-    });
+  getPersonalizationsFull(): Observable<PersonalizationsResponseFull> {
+    const url = `${environment.apiUrl}${API_PATHS.PERSONALIZATIONS}?$expand=${API_PATHS.PERSONALIZATIONS_FAVORITES},${API_PATHS.PERSONALIZATIONS_CUSTOM_PLAYLISTS}`;
+    return this.http
+      .get<CommonResponse>(url)
+      .pipe(
+        map((res: CommonResponse) => res.value[0] as PersonalizationsResponseFull),
+      );
   }
 
-  addToFavourites(id: number, typeID: FavouritesTypes) {
-    this.http.post(`${environment.apiUrl}app/Favourites`, { itemID: id, itemType_id: typeID }).subscribe();
+  addToFavorites(id: number, typeID: FavoritesTypes) {
+    this.http.post(`${environment.apiUrl}${API_PATHS.FAVORITES}`, { itemID: id, itemType_id: typeID }).subscribe();
   }
 
-  removeFromFavourites(id: number, typeID: FavouritesTypes) {
-    this.http.delete(`${environment.apiUrl}app/Favourites(itemID=${id},itemType_id=${typeID},parent_id=${this.personalization.id}`).subscribe();
+  removeFromFavorites(itemID: number, typeID: FavoritesTypes, userID: string) {
+    this.http.delete(`${environment.apiUrl}${API_PATHS.FAVORITES}(itemID=${itemID},itemType_id=${typeID},parent_id='${userID}')`).subscribe();
   }
 }

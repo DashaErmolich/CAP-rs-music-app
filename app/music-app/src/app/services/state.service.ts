@@ -1,7 +1,7 @@
+/* eslint-disable default-case */
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { IUserModel } from 'src/app/models/user-model.models';
-// import { AuthorizationApiService } from './authorization-api.service';
 import { ITrackResponse } from '../models/api-response.models';
 import { ILikedSearchResults, LikedSearchResults } from '../models/search.models';
 import { LocalStorageService } from './local-storage.service';
@@ -9,7 +9,8 @@ import { ITrackListInfo } from '../models/audio-player.models';
 import { UtilsService } from './utils.service';
 import { ICustomPlaylistModel } from '../models/user-model.models';
 import { AudioService } from './audio.service';
-import { FavouritesTypes, UserService } from './user.service';
+import { FavoritesTypes, User, UserService } from './user.service';
+import { PersonalizationsResponseFull } from '../models/srv-response.models';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,8 @@ export class StateService {
   isEqualizerShown$ = new BehaviorSubject<boolean>(false);
 
   user!: IUserModel;
+
+  newUser!: User;
 
   isAuthorized = false;
 
@@ -55,17 +58,38 @@ export class StateService {
 
   constructor(
     private storage: LocalStorageService,
-    // private authService: AuthorizationApiService,
     private myUtils: UtilsService,
     private myAudio: AudioService,
     private userService: UserService,
   ) {
     const trackListInfo: ITrackListInfo | null = this.storage.getTrackListInfo();
-    // this.updateState();
 
     if (trackListInfo !== null) {
       this.setTrackListInfo(trackListInfo.trackList, trackListInfo.currentTrackIndex);
     }
+
+    userService.getPersonalizationsFull().subscribe((res: PersonalizationsResponseFull) => {
+      this.newUser = res;
+      this.likedTracks$.next(res.favorites
+        .filter((item) => item.itemType_id === FavoritesTypes.Track)
+        .map((item) => item.itemID));
+      this.userName$.next(res.username);
+      this.userIconId$.next(res.iconID);
+      this.likedSearchResults$.next({
+        album: res.favorites
+          .filter((item) => item.itemType_id === FavoritesTypes.Album)
+          .map((item) => item.itemID),
+        artist: res.favorites
+          .filter((item) => item.itemType_id === FavoritesTypes.Artist)
+          .map((item) => item.itemID),
+        playlist: res.favorites
+          .filter((item) => item.itemType_id === FavoritesTypes.Playlist)
+          .map((item) => item.itemID),
+        radio: res.favorites
+          .filter((item) => item.itemType_id === FavoritesTypes.Radio)
+          .map((item) => item.itemID),
+      });
+    });
   }
 
   setTrackListInfo(tracks: Partial<ITrackResponse>[], index: number) {
@@ -107,8 +131,8 @@ export class StateService {
     const likedTracks = this.likedTracks$.value;
     likedTracks.push(trackDeezerId);
     this.likedTracks$.next(likedTracks);
-    this.updateUserData();
-    this.userService.addToFavourites(trackDeezerId, FavouritesTypes.Track);
+    // this.updateUserData();
+    this.userService.addToFavorites(trackDeezerId, FavoritesTypes.Track);
   }
 
   removeLikedTrack(trackDeezerId: number): void {
@@ -118,8 +142,7 @@ export class StateService {
       likedTracks.splice(trackIndex, 1);
     }
     this.likedTracks$.next(likedTracks);
-    this.updateUserData();
-    this.userService.removeFromFavourites(trackDeezerId, FavouritesTypes.Track);
+    this.userService.removeFromFavorites(trackDeezerId, FavoritesTypes.Track, this.newUser.id);
   }
 
   setNavigationMenuVisibility(isVisible: boolean): void {
@@ -138,7 +161,24 @@ export class StateService {
     const likedSearchResults = this.likedSearchResults$.value;
     likedSearchResults[type].push(id);
     this.likedSearchResults$.next(likedSearchResults);
-    this.updateUserData();
+    // this.updateUserData();
+    let typeID: number;
+
+    switch (type) {
+      case 'playlist':
+        typeID = 2;
+        break;
+      case 'radio':
+        typeID = 3;
+        break;
+      case 'album':
+        typeID = 4;
+        break;
+      case 'artist':
+        typeID = 5;
+        break;
+    }
+    this.userService.addToFavorites(id, typeID);
   }
 
   removeLikedSearchResult(type: LikedSearchResults, id: number): void {
@@ -150,7 +190,23 @@ export class StateService {
       likedSearchResults[type].splice(searchResultIndex, 1);
     }
     this.likedSearchResults$.next(likedSearchResults);
-    this.updateUserData();
+    let typeID: number;
+
+    switch (type) {
+      case 'playlist':
+        typeID = 2;
+        break;
+      case 'radio':
+        typeID = 3;
+        break;
+      case 'album':
+        typeID = 4;
+        break;
+      case 'artist':
+        typeID = 5;
+        break;
+    }
+    this.userService.removeFromFavorites(id, typeID, this.newUser.id);
   }
 
   updateUserData(): void {

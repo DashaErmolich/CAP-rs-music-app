@@ -1,10 +1,10 @@
+/* eslint-disable class-methods-use-this */
 import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UtilsService {
-  // eslint-disable-next-line class-methods-use-this
   getShuffledArray<T>(array: T[]): T[] {
     const shuffledArray = [...array];
     let lastItemIndex = array.length - 1;
@@ -21,7 +21,6 @@ export class UtilsService {
     return shuffledArray;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   isEmptyObject(obj: Object): boolean {
     return Object.keys(obj).length === 0
       && obj.constructor === Object;
