@@ -138,7 +138,7 @@ export class StateService {
     this.userName$.next(userName);
     this.userIconId$.next(userIconId);
     if (isUserUpdateNeeded) {
-      this.updateUserData();
+      this.userService.setPersonalization(userName, userIconId, this.newUser.id);
     }
   }
 
@@ -224,35 +224,6 @@ export class StateService {
         break;
     }
     this.userService.removeFromFavorites(id, typeID, this.newUser.id);
-  }
-
-  updateUserData(): void {
-    const updatedUser: IUserModel = { ...this.user };
-    updatedUser.username = this.userName$.value;
-    updatedUser.userIconId = this.userIconId$.value;
-    updatedUser.userFavorites = {
-      tracks: this.likedTracks$.value,
-      albums: this.likedSearchResults$.value.album,
-      artists: this.likedSearchResults$.value.artist,
-      playlists: this.likedSearchResults$.value.playlist,
-      radio: this.likedSearchResults$.value.radio,
-    };
-    updatedUser.customPlaylists = this.customPlaylists$.value;
-    // this.authService.setUser(updatedUser).subscribe((res) => {
-    //   this.user = res;
-    // });
-  }
-
-  setUserDataFromService(userData: IUserModel): void {
-    this.setUserData(userData.username, userData.userIconId, false);
-    this.likedTracks$.next(userData.userFavorites.tracks);
-    this.likedSearchResults$.next({
-      album: userData.userFavorites.albums,
-      artist: userData.userFavorites.artists,
-      playlist: userData.userFavorites.playlists,
-      radio: userData.userFavorites.radio,
-    });
-    this.customPlaylists$.next(userData.customPlaylists);
   }
 
   setCurrentTrackListVisibility(isVisible: boolean) {

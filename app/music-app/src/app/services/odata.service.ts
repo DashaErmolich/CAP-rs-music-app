@@ -76,4 +76,11 @@ export class ODataService {
   deleteCustomPlaylist(id: string) {
     this.http.delete(`${environment.apiUrl}${API_PATHS.CUSTOM_PLAYLISTS}(${id})`).subscribe();
   }
+
+  setPersonalization(newUsername: string, userIconId: number, userID: string): void {
+    this.http.patch(`${environment.apiUrl}${API_PATHS.PERSONALIZATIONS}('${userID}')`, {
+      username: newUsername,
+      iconID: userIconId,
+    }).subscribe();
+  }
 }
