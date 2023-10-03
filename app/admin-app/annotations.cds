@@ -8,21 +8,46 @@ annotate service.Personalizations with @(
         },
         {
             $Type : 'UI.DataField',
-            Label : 'username',
             Value : username,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'isActivated',
             Value : isActivated,
+            ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
-            Label : 'iconID',
             Value : iconID,
+            ![@UI.Hidden],
         },
     ]
 );
+annotate service.Personalizations with @(
+    UI.SelectionVariant : {
+        $Type : 'UI.SelectionVariantType',
+        SelectOptions : [
+            {
+                $Type : 'UI.SelectOptionType',
+                Ranges : [
+                    {
+                        $Type : 'UI.SelectionRangeType',
+                        Option : #CP,
+                        Low : 'dasha',
+                        Sign : #I,
+                    },
+                ],
+                PropertyName : id,
+            },
+        ],
+    }
+);
+annotate service.Personalizations with @(
+    UI.SelectionFields : [
+        id,
+        username,
+    ],
+);
+
 annotate service.Personalizations with @(
     UI.FieldGroup #GeneratedGroup1 : {
         $Type : 'UI.FieldGroupType',
