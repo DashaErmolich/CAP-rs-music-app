@@ -84,7 +84,6 @@
             "css": []
         },
         "routing": {
-            "config": {},
             "routes": [
                 {
                     "pattern": ":?query:",
@@ -115,6 +114,19 @@
                                 "Personalizations": {
                                     "detail": {
                                         "route": "PersonalizationsObjectPage"
+                                    }
+                                }
+                            },
+                            "initialLoad": "Enabled",
+                            "controlConfiguration": {
+                                "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "columns": {
+                                        "DataField::username": {
+                                            "width": "50%"
+                                        },
+                                        "DataField::id": {
+                                            "width": "50%"
+                                        }
                                     }
                                 }
                             }
@@ -150,6 +162,11 @@
                         }
                     }
                 }
+            }
+        },
+        "extends": {
+            "extensions": {
+                "sap.ui.controllerExtensions": {}
             }
         }
     },
