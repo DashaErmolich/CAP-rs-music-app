@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { FormControl, Validators } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import { Router } from '@angular/router';
@@ -19,6 +19,8 @@ const DEFAULT_PLAYLIST_NAME = 'My playlist';
   styleUrls: ['./custom-playlist.component.scss'],
 })
 export class CustomPlaylistComponent implements OnInit, OnDestroy {
+  private onDestroy$ = new Subject();
+
   playListName = DEFAULT_PLAYLIST_NAME;
 
   tracks: Partial<ITrackResponse>[] = [];
@@ -71,25 +73,26 @@ export class CustomPlaylistComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.isSmallSubscription = this.responsive.isSmall$.subscribe((data) => {
-      this.isSmall = data;
-    });
+    this.responsive.isSmall$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.isSmall = data;
+      });
 
-    this.subscriptions.push(this.isSmallSubscription);
+    this.responsive.isHandset$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.isHandset = data;
+      });
 
-    this.isHandsetSubscription = this.responsive.isHandset$.subscribe((data) => {
-      this.isHandset = data;
-    });
+    this.responsive.isExtraSmall$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.isExtraSmall = data;
+      });
 
-    this.subscriptions.push(this.isHandsetSubscription);
-
-    this.isExtraSmallSubscription = this.responsive.isExtraSmall$.subscribe((data) => {
-      this.isExtraSmall = data;
-    });
-
-    this.subscriptions.push(this.isExtraSmallSubscription);
-
-    this.searchControlSubscription = this.searchControl.valueChanges
+    this.searchControl.valueChanges
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe((res) => {
         this.isLoading = true;
         this.searchValue = res;
@@ -97,19 +100,16 @@ export class CustomPlaylistComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       });
 
-    this.subscriptions.push(this.searchControlSubscription);
-
-    this.nameSubscription = this.nameControl.valueChanges
+    this.nameControl.valueChanges
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe((res) => {
         this.playListName = res;
       });
-
-    this.subscriptions.push(this.nameSubscription);
-    this.subscriptions.push(this.searchSubscription);
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.onDestroy$.next(null);
+    this.onDestroy$.complete();
   }
 
   getSearch() {
@@ -143,7 +143,7 @@ export class CustomPlaylistComponent implements OnInit, OnDestroy {
     this.playListName = DEFAULT_PLAYLIST_NAME;
     this.searchControl.setValue('');
     this.customPlaylistTracks = [];
-    this.myRouter.navigate([`music/user-play-list/${playlist.id}`]);
+    // this.myRouter.navigate([`music/user-play-list/${playlist.id}`]);
   }
 
   getMore() {

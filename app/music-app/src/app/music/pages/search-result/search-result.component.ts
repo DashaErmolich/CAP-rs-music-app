@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import {
+  Subject, Subscription, filter, takeUntil,
+} from 'rxjs';
 import { DEFAULT_SRC } from 'src/app/constants/constants';
 import { SearchType } from 'src/app/enums/endpoints';
 import {
@@ -17,6 +19,7 @@ import {
 import { AudioService } from 'src/app/services/audio.service';
 import { DeezerRestApiService } from 'src/app/services/deezer-api.service';
 import { StateService } from 'src/app/services/state.service';
+import { isNotNullOrUndefined } from 'src/app/helpers/helpers';
 import { ResponsiveService } from '../../../services/responsive.service';
 import { ICustomPlaylistModel } from '../../../models/user-model.models';
 import { RandomColorHelper } from '../../../helpers/random-color-helper';
@@ -28,6 +31,8 @@ import { UtilsService } from '../../../services/utils.service';
   styleUrls: ['./search-result.component.scss'],
 })
 export class SearchResultComponent extends RandomColorHelper implements OnInit, OnDestroy {
+  private onDestroy$ = new Subject();
+
   resultId!: string;
 
   result!:
@@ -123,63 +128,62 @@ export class SearchResultComponent extends RandomColorHelper implements OnInit, 
 
   ngOnInit(): void {
     this.isFirstPlay = true;
-    this.routeParams$ = this.route.params.subscribe((params) => {
-      [this.resultType] = Object.keys(params);
-      this.resultId = params[this.resultType];
-      switch (this.resultType) {
-        case SearchType.artist:
-          this.getArtist(Number(this.resultId));
-          break;
-        case SearchType.album:
-          this.getAlbum(Number(this.resultId));
-          break;
-        case SearchType.playlist:
-          this.getPlaylist(Number(this.resultId));
-          break;
-        case SearchType.radio:
-          this.getRadio(Number(this.resultId));
-          break;
-        case SearchType.userPlaylist:
-          this.getUserPlaylist(this.resultId);
-          break;
-        default:
-          break;
-      }
-    });
 
-    this.trackList$ = this.myState.trackList$.subscribe((tracks) => {
+    this.route.params
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((params) => {
+        [this.resultType] = Object.keys(params);
+        this.resultId = params[this.resultType];
+        switch (this.resultType) {
+          case SearchType.artist:
+            this.getArtist(Number(this.resultId));
+            break;
+          case SearchType.album:
+            this.getAlbum(Number(this.resultId));
+            break;
+          case SearchType.playlist:
+            this.getPlaylist(Number(this.resultId));
+            break;
+          case SearchType.radio:
+            this.getRadio(Number(this.resultId));
+            break;
+          case SearchType.userPlaylist:
+            this.getUserPlaylist(this.resultId);
+            break;
+          default:
+            break;
+        }
+      });
+
+    this.myState.trackList$.pipe(takeUntil(this.onDestroy$)).subscribe((tracks) => {
       this.tracksOfState = tracks;
       this.isPlayThisTrackList();
     });
-    this.isPause$ = this.myAudio.isPause$.subscribe((res) => {
+    this.myAudio.isPause$.pipe(takeUntil(this.onDestroy$)).subscribe((res) => {
       this.isPause = res;
     });
-    this.likedSearchResults$ = this.myState.likedSearchResults$.subscribe(
-      (res) => {
-        this.likedSearchResults = res;
-      },
-    );
-    this.isSmall$ = this.responsive.isSmall$.subscribe((data) => {
+    this.myState.likedSearchResults$
+      .pipe(takeUntil(this.onDestroy$), filter(isNotNullOrUndefined))
+      .subscribe(
+        (res) => {
+          this.likedSearchResults = res;
+          this.isSearchResultLiked();
+        },
+      );
+    this.responsive.isSmall$.pipe(takeUntil(this.onDestroy$)).subscribe((data) => {
       this.isSmall = data;
     });
-    this.subscriptions.push(this.isSmall$);
-    this.isHandset$ = this.responsive.isHandset$.subscribe((data) => {
+    this.responsive.isHandset$.pipe(takeUntil(this.onDestroy$)).subscribe((data) => {
       this.isHandset = data;
     });
-    this.subscriptions.push(this.isHandset$);
 
-    this.isPlay$ = this.myAudio.isPlay$.subscribe((res) => { this.isPlay = res; });
-    this.subscriptions.push(this.isPlay$);
+    this.myAudio.isPlay$
+      .pipe(takeUntil(this.onDestroy$)).subscribe((res) => { this.isPlay = res; });
   }
 
   ngOnDestroy(): void {
-    if (this.trackList$) this.trackList$.unsubscribe();
-    if (this.isPause$) this.isPause$.unsubscribe();
-    if (this.isPlay$) this.isPlay$.unsubscribe();
-    if (this.routeParams$) this.routeParams$.unsubscribe();
-    if (this.result$) this.result$.unsubscribe();
-    if (this.likedSearchResults$) this.likedSearchResults$.unsubscribe();
-    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    this.onDestroy$.next(null);
+    this.onDestroy$.complete();
   }
 
   getArtist(id: number) {
@@ -317,7 +321,7 @@ export class SearchResultComponent extends RandomColorHelper implements OnInit, 
   }
 
   isSearchResultLiked() {
-    this.isLiked = this.likedSearchResults[this.type].includes(Number(this.result.id));
+    this.isLiked = this.likedSearchResults[this.type]?.includes(Number(this.result.id));
     return this.isLiked;
   }
 

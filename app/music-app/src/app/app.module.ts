@@ -15,7 +15,7 @@ import { CoreModule } from './core/core.module';
 import { MusicModule } from './music/music.module';
 import { UserModule } from './user/user.module';
 import { ProgressLoaderInterceptor } from './interceptors/progress-loader.interceptor';
-import { AuthorizedGuard } from './guards/isAuthorized.guard';
+// import { AuthorizedGuard } from './guards/isAuthorized.guard';
 
 function initializeApp(): Promise<void> {
   return new Promise((resolve) => {
@@ -45,7 +45,7 @@ function initializeApp(): Promise<void> {
     {
       provide: HTTP_INTERCEPTORS, useClass: ProgressLoaderInterceptor, multi: true,
     },
-    AuthorizedGuard,
+    // AuthorizedGuard,
     {
       provide: APP_INITIALIZER,
       useFactory: () => initializeApp,

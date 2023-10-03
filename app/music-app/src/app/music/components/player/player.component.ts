@@ -13,7 +13,7 @@ import {
   trigger,
 } from '@angular/animations';
 
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { ITrackResponse } from '../../../models/api-response.models';
 import { IAudioPlayerState, IPlayerControlsState } from '../../../models/audio-player.models';
 
@@ -46,6 +46,8 @@ export class PlayerComponent extends ThemeHelper implements OnInit, OnDestroy {
   @Input() isHandset!: boolean;
 
   @Input() isExtraSmall!: boolean;
+
+  private onDestroy$ = new Subject();
 
   trackList!: Partial<ITrackResponse>[];
 
@@ -119,67 +121,77 @@ export class PlayerComponent extends ThemeHelper implements OnInit, OnDestroy {
       isShuffleOn: false,
     };
 
-    this.trackList$ = this.myState.trackList$.subscribe((data: Partial<ITrackResponse>[]) => {
-      this.trackList = data;
-    });
-    this.subscriptions.push(this.trackList$);
+    this.trackList$ = this.myState.trackList$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data: Partial<ITrackResponse>[]) => {
+        this.trackList = data;
+      });
 
-    this.playingTrackIndex$ = this.myState.playingTrackIndex$.subscribe((data: number | null) => {
-      this.currentTrackIndex = data;
-      this.checkTrackPosition();
-      if (this.likedTracks) {
-        this.isTrackLiked();
-      }
-    });
-    this.subscriptions.push(this.playingTrackIndex$);
+    this.playingTrackIndex$ = this.myState.playingTrackIndex$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data: number | null) => {
+        this.currentTrackIndex = data;
+        this.checkTrackPosition();
+        if (this.likedTracks) {
+          this.isTrackLiked();
+        }
+      });
 
-    this.audioState$ = this.myAudio.state$.subscribe((data) => {
-      this.currentState = data;
-    });
-    this.subscriptions.push(this.audioState$);
+    this.audioState$ = this.myAudio.state$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.currentState = data;
+      });
 
-    this.audioIsPlay$ = this.myAudio.isPlay$.subscribe((data) => {
-      this.isPlay = data;
-    });
-    this.subscriptions.push(this.audioIsPlay$);
+    this.audioIsPlay$ = this.myAudio.isPlay$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.isPlay = data;
+      });
 
-    this.audioIsTrackReady$ = this.myAudio.isTrackReady$.subscribe((data) => {
-      this.isTrackReady = data;
-    });
-    this.subscriptions.push(this.audioIsTrackReady$);
+    this.audioIsTrackReady$ = this.myAudio.isTrackReady$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.isTrackReady = data;
+      });
 
-    this.audioIsMute$ = this.myAudio.isMute$.subscribe((data) => {
-      this.isMute = data;
-    });
-    this.subscriptions.push(this.audioIsMute$);
+    this.audioIsMute$ = this.myAudio.isMute$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.isMute = data;
+      });
 
-    this.isEqualizerShown$ = this.myState.isEqualizerShown$.subscribe((data) => {
-      this.isEqualizerShown = data;
-    });
-    this.subscriptions.push(this.isEqualizerShown$);
+    this.isEqualizerShown$ = this.myState.isEqualizerShown$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.isEqualizerShown = data;
+      });
 
     if (this.currentTrackIndex !== null) {
       this.isInitialTrackSet = true;
     }
 
-    this.likedTracks$ = this.myState.likedTracks$.subscribe((data) => {
-      this.likedTracks = data;
-      this.isTrackLiked();
-    });
-    this.subscriptions.push(this.likedTracks$);
+    this.likedTracks$ = this.myState.likedTracks$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.likedTracks = data;
+        this.isTrackLiked();
+      });
 
     this.unAudioEndedListener = this.renderer2.listen(this.myAudio.audio, 'ended', () => {
       this.playNext();
     });
 
-    this.isCurrentTrackListShown$ = this.myState.isCurrentTrackListShown$.subscribe((data) => {
-      this.isCurrentTrackListShown = data;
-    });
-    this.subscriptions.push(this.isCurrentTrackListShown$);
+    this.isCurrentTrackListShown$ = this.myState.isCurrentTrackListShown$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => {
+        this.isCurrentTrackListShown = data;
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    this.onDestroy$.next(null);
+    this.onDestroy$.complete();
     this.unAudioEndedListener();
   }
 
