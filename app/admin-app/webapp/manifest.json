@@ -51,7 +51,8 @@
                 "sap.m": {},
                 "sap.ui.core": {},
                 "sap.ushell": {},
-                "sap.fe.templates": {}
+                "sap.fe.templates": {},
+                "sap.f": {}
             }
         },
         "contentDensities": {
@@ -157,14 +158,33 @@
                             "showRelatedApps": true,
                             "sectionLayout": "Page",
                             "controlConfiguration": {
-                                "favorites/@com.sap.vocabularies.UI.v1.LineItem#favourites": {
+                                "customPlaylists/@com.sap.vocabularies.UI.v1.LineItem#i18ncustomPlaylists": {
                                     "tableSettings": {
                                         "enableExport": true,
                                         "enableFullScreen": true
                                     },
                                     "columns": {
+                                        "DataField::title": {
+                                            "width": "80%"
+                                        },
+                                        "DataField::createdAt": {
+                                            "width": "20%"
+                                        }
+                                    }
+                                },
+                                "favorites/@com.sap.vocabularies.UI.v1.LineItem#i18nfavorites": {
+                                    "tableSettings": {
+                                        "enableFullScreen": true
+                                    },
+                                    "columns": {
+                                        "DataField::details::image": {
+                                            "width": "10%"
+                                        },
                                         "DataField::itemType::name": {
-                                            "width": "75%"
+                                            "width": "20%"
+                                        },
+                                        "DataField::details::description": {
+                                            "width": "70%"
                                         }
                                     }
                                 }
@@ -179,7 +199,21 @@
                     "options": {
                         "settings": {
                             "editableHeaderContent": false,
-                            "entitySet": "CustomPlaylists"
+                            "entitySet": "CustomPlaylists",
+                            "sectionLayout": "Page",
+                            "controlConfiguration": {
+                                "tracks/@com.sap.vocabularies.UI.v1.LineItem#i18ntracklist": {
+                                    "tableSettings": {
+                                        "enableExport": true,
+                                        "enableFullScreen": true
+                                    }
+                                }
+                            },
+                            "content": {
+                                "header": {
+                                    "anchorBarVisible": true
+                                }
+                            }
                         }
                     }
                 }

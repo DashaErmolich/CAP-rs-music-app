@@ -48,6 +48,9 @@ entity CustomPlaylists : cuid, managed {
 entity CustomPlayliststTracks {
     key parent  : Association to CustomPlaylists;
     key trackID : Integer64;
+        details : Association to DeezerDetails
+                      on  details.itemID      = trackID
+                      and details.itemType.id = 1;
 }
 
 entity DeezerDetails {
@@ -55,4 +58,7 @@ entity DeezerDetails {
     key itemType    : Association to FavoritesTypes;
         image       : String;
         description : String;
+        title       : String;
+        artist      : String;
+        releaseDate : String;
 }

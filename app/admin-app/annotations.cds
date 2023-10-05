@@ -1,4 +1,6 @@
 using AdminService.Personalizations as personalizations from '../../srv/app-service';
+using AdminService.CustomPlaylists as customPlaylists from '../../srv/app-service';
+
 
 annotate personalizations with @(UI.LineItem: [
     {

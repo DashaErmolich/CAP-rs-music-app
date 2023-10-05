@@ -48,5 +48,33 @@ module.exports = async function (srv) {
             itemID: data[i].itemID,
             itemType_id: data[i].itemType_id
         });
-    })
+    });
+    this.before('READ', 'Personalizations/customPlaylists', () => {
+    });
+    this.after('READ', 'Personalizations/customPlaylists/tracks', async (data) => {
+        const detailsInfo = [...data];
+        let promises = [];
+
+        detailsInfo.forEach((item) => {
+            const url = `/track/${item.trackID}`;
+            const promise = executeHttpRequest({
+                destinationName: 'DeezerAPI',
+            }, {
+                method: 'GET',
+                url: url,
+            });
+            promises = [...promises, promise];
+        })
+
+        const response = await Promise.allSettled(promises);
+
+        data.forEach((item, i) => item.details = {
+            trackID: data[i].trackID,
+            parent_ID: data[i].parent_ID,
+            image: response[i].value.data.artist.picture_small || undefined,
+            title: response[i].value.data.title,
+            artist: response[i].value.data.artist.name,
+            releaseDate: response[i].value.data.release_date,
+        });
+    });
 }
