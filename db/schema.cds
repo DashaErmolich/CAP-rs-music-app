@@ -7,7 +7,7 @@ using {
 namespace music.app;
 
 entity Personalizations {
-    key id              : User              @cds.on.insert: $user;
+    key id              : User    @cds.on.insert: $user;
         username        : String default 'User';
         isActivated     : Boolean default true;
         iconID          : Integer @assert.range : [
@@ -29,6 +29,9 @@ entity Favorites {
                     ];
         parent    : Association to Personalizations
                         on parent.id = parent_id;
+        details   : Association to DeezerDetails
+                        on  details.itemID   = itemID
+                        and details.itemType = itemType;
 }
 
 entity FavoritesTypes {
@@ -45,4 +48,11 @@ entity CustomPlaylists : cuid, managed {
 entity CustomPlayliststTracks {
     key parent  : Association to CustomPlaylists;
     key trackID : Integer64;
+}
+
+entity DeezerDetails {
+    key itemID      : Integer64;
+    key itemType    : Association to FavoritesTypes;
+        image       : String;
+        description : String;
 }

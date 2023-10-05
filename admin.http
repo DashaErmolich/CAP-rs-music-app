@@ -97,3 +97,7 @@ Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
 ### DELETE CUSTOM PLAYLIST
 DELETE {{server}}/app/CustomPlaylists(a142ae3f-bce4-4653-b440-0f2d17f4ad25)
 Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
+
+###
+GET {{server}}/app/Personalizations('dasha.ermolich@gmail.com')/favorites
+Authorization: Basic ZGFzaGEuZXJtb2xpY2hAZ21haWwuY29tOg==
