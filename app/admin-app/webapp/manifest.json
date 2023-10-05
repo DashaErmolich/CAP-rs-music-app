@@ -161,7 +161,10 @@
                                 "customPlaylists/@com.sap.vocabularies.UI.v1.LineItem#i18ncustomPlaylists": {
                                     "tableSettings": {
                                         "enableExport": true,
-                                        "enableFullScreen": true
+                                        "enableFullScreen": true,
+                                        "quickVariantSelection": {
+                                            "showCounts": true
+                                        }
                                     },
                                     "columns": {
                                         "DataField::title": {
@@ -206,6 +209,20 @@
                                     "tableSettings": {
                                         "enableExport": true,
                                         "enableFullScreen": true
+                                    },
+                                    "columns": {
+                                        "DataField::details::image": {
+                                            "width": "10%"
+                                        },
+                                        "DataField::details::releaseDate": {
+                                            "width": "10%"
+                                        },
+                                        "DataField::details::title": {
+                                            "width": "50%"
+                                        },
+                                        "DataField::details::artist": {
+                                            "width": "30%"
+                                        }
                                     }
                                 }
                             },

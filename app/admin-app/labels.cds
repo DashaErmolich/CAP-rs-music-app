@@ -149,20 +149,17 @@ annotate AdminService.CustomPlaylists with @(
             $Type : 'UI.DataField',
             Value : title,
         },
-        TypeImageUrl : '',
-        Description : {
-            $Type : 'UI.DataField',
-            Value : ID,
-        },
+        TypeImageUrl : ''
     }
 );
 annotate AdminService.CustomPlaylists with @(
+    
     UI.Facets : [
         {
             $Type : 'UI.ReferenceFacet',
             Label : '{i18n>tracklist}',
             ID : 'i18ntracklist',
-            Target : 'tracks/@UI.PresentationVariant#i18ntracklist',
+            Target : 'tracks/@UI.LineItem#i18ntracklist',
         },
     ]
 );
@@ -170,13 +167,9 @@ annotate AdminService.CustomPlayliststTracks with @(
     UI.LineItem #i18ntracklist : [
         {
             $Type : 'UI.DataField',
-            Value : trackID,
-            Label : '{i18n>trackID}',
-        },
-        {
-            $Type : 'UI.DataField',
             Value : details.image,
             Label : '{i18n>image}',
+
         },
         {
             $Type : 'UI.DataField',
@@ -193,12 +186,4 @@ annotate AdminService.CustomPlayliststTracks with @(
             Value : details.releaseDate,
             Label : '{i18n>releaseDate}',
         },]
-);
-annotate AdminService.CustomPlayliststTracks with @(
-    UI.PresentationVariant #i18ntracklist : {
-        $Type : 'UI.PresentationVariantType',
-        Visualizations : [
-            '@UI.LineItem#i18ntracklist',
-        ],
-    }
 );
