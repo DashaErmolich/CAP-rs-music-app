@@ -7,14 +7,25 @@
         "applicationVersion": {
             "version": "0.0.1"
         },
-        "title": "{{appTitle}}",
-        "description": "{{appDescription}}",
+        "title": "Users Administration",
+        "description": "Getting users information",
         "resources": "resources.json",
         "sourceTemplate": {
             "id": "@sap/generator-fiori:lrop",
             "version": "1.11.1",
             "toolsId": "a99a0fda-5b9b-4bf1-a2a7-52fe2c3dd1c0"
-        },
+        },    "crossNavigation": {
+            "inbounds": {
+              "admin-display": {
+                "signature": {
+                  "parameters": {},
+                  "additionalParameters": "allowed"
+                },
+                "semanticObject": "Admin",
+                "action": "display"
+              }
+            }
+          },
         "dataSources": {
             "mainService": {
                 "uri": "/admin/",
