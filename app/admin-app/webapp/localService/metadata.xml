@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="AdminService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Favorites" EntityType="AdminService.Favorites">
+                    <NavigationPropertyBinding Path="itemType" Target="FavoritesTypes"/>
+                    <NavigationPropertyBinding Path="parent" Target="Personalizations"/>
+                </EntitySet>
+                <EntitySet Name="FavoritesTypes" EntityType="AdminService.FavoritesTypes"/>
+                <EntitySet Name="Personalizations" EntityType="AdminService.Personalizations">
+                    <NavigationPropertyBinding Path="favorites" Target="Favorites"/>
+                    <NavigationPropertyBinding Path="customPlaylists" Target="CustomPlaylists"/>
+                </EntitySet>
+                <EntitySet Name="CustomPlaylists" EntityType="AdminService.CustomPlaylists">
+                    <NavigationPropertyBinding Path="tracks" Target="CustomPlayliststTracks"/>
+                </EntitySet>
+                <EntitySet Name="CustomPlayliststTracks" EntityType="AdminService.CustomPlayliststTracks">
+                    <NavigationPropertyBinding Path="parent" Target="CustomPlaylists"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="Favorites">
+                <Key>
+                    <PropertyRef Name="parent_id"/>
+                    <PropertyRef Name="itemID"/>
+                    <PropertyRef Name="itemType_id"/>
+                </Key>
+                <Property Name="parent_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+                <Property Name="itemID" Type="Edm.Int64" Nullable="false"/>
+                <NavigationProperty Name="itemType" Type="AdminService.FavoritesTypes">
+                    <ReferentialConstraint Property="itemType_id" ReferencedProperty="id"/>
+                </NavigationProperty>
+                <Property Name="itemType_id" Type="Edm.Int16" Nullable="false"/>
+                <NavigationProperty Name="parent" Type="AdminService.Personalizations" Partner="favorites">
+                    <ReferentialConstraint Property="parent_id" ReferencedProperty="id"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="FavoritesTypes">
+                <Key>
+                    <PropertyRef Name="id"/>
+                </Key>
+                <Property Name="id" Type="Edm.Int16" Nullable="false"/>
+                <Property Name="name" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Personalizations">
+                <Key>
+                    <PropertyRef Name="id"/>
+                </Key>
+                <Property Name="id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+                <Property Name="username" Type="Edm.String" DefaultValue="User"/>
+                <Property Name="isActivated" Type="Edm.Boolean" DefaultValue="true"/>
+                <Property Name="iconID" Type="Edm.Int32"/>
+                <NavigationProperty Name="favorites" Type="Collection(AdminService.Favorites)" Partner="parent">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="customPlaylists" Type="Collection(AdminService.CustomPlaylists)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="CustomPlaylists">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="title" Type="Edm.String"/>
+                <NavigationProperty Name="tracks" Type="Collection(AdminService.CustomPlayliststTracks)" Partner="parent">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="CustomPlayliststTracks">
+                <Key>
+                    <PropertyRef Name="parent_ID"/>
+                    <PropertyRef Name="trackID"/>
+                </Key>
+                <NavigationProperty Name="parent" Type="AdminService.CustomPlaylists" Partner="tracks">
+                    <ReferentialConstraint Property="parent_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="parent_ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="trackID" Type="Edm.Int64" Nullable="false"/>
+            </EntityType>
+            <Annotations Target="AdminService.Favorites/parent_id">
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                    <Annotation Term="Common.Label" String="{i18n>UserID}"/>
+                    </Annotations>
+                    <Annotations Target="AdminService.Favorites/itemType_id">
+                        <Annotation Term="Validation.Minimum" Int="1"/>
+                        <Annotation Term="Validation.Maximum" Int="5"/>
+                    </Annotations>
+                    <Annotations Target="AdminService.Personalizations/id">
+                        <Annotation Term="Core.Computed" Bool="true"/>
+                        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                            <Annotation Term="Common.Label" String="{i18n>UserID}"/>
+                            </Annotations>
+                            <Annotations Target="AdminService.Personalizations/iconID">
+                                <Annotation Term="Validation.Minimum" Int="1"/>
+                                <Annotation Term="Validation.Maximum" Int="11"/>
+                            </Annotations>
+                            <Annotations Target="AdminService.CustomPlaylists/createdAt">
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Immutable" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                </Annotations>
+                                <Annotations Target="AdminService.CustomPlaylists/createdBy">
+                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                    <Annotation Term="Core.Immutable" Bool="true"/>
+                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                        </Annotations>
+                                        <Annotations Target="AdminService.CustomPlaylists/modifiedAt">
+                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                            </Annotations>
+                                            <Annotations Target="AdminService.CustomPlaylists/modifiedBy">
+                                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                    </Annotations>
+                                                </Schema>
+                                            </edmx:DataServices>
+                                        </edmx:Edmx>

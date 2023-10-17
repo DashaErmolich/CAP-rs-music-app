@@ -3,8 +3,21 @@
     "sap.app": {
       "id": "cap-rs-music-app",
       "type": "application",
+      "title": "RS Music App",
+      "description": "Spotify clone",
       "applicationVersion": {
         "version": "1.0.0"
+      },  "crossNavigation": {
+        "inbounds": {
+          "MusicPlayer": {
+            "signature": {
+              "parameters": {},
+              "additionalParameters": "allowed"
+            },
+            "semanticObject": "musicplayer",
+            "action": "display"
+          }
+        }
       }
     },
     "sap.ui": {

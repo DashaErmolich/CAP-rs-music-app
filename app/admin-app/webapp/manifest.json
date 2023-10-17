@@ -1,0 +1,264 @@
+{
+    "_version": "1.49.0",
+    "sap.app": {
+        "id": "admin.adminapp",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "Users Administration",
+        "description": "Getting users information",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:lrop",
+            "version": "1.11.1",
+            "toolsId": "a99a0fda-5b9b-4bf1-a2a7-52fe2c3dd1c0"
+        },    "crossNavigation": {
+            "inbounds": {
+              "admin-display": {
+                "signature": {
+                  "parameters": {},
+                  "additionalParameters": "allowed"
+                },
+                "semanticObject": "Admin",
+                "action": "display"
+              }
+            }
+          },
+        "dataSources": {
+            "mainService": {
+                "uri": "/admin/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "4.0"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.118.1",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.ushell": {},
+                "sap.fe.templates": {},
+                "sap.f": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "admin.adminapp.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
+            },
+            "@i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "resources": {
+            "css": []
+        },
+        "routing": {
+            "routes": [
+                {
+                    "pattern": ":?query:",
+                    "name": "PersonalizationsList",
+                    "target": "PersonalizationsList"
+                },
+                {
+                    "pattern": "Personalizations({key}):?query:",
+                    "name": "PersonalizationsObjectPage",
+                    "target": "PersonalizationsObjectPage"
+                },
+                {
+                    "pattern": "Personalizations({key})/customPlaylists({key2}):?query:",
+                    "name": "CustomPlaylistsObjectPage",
+                    "target": "CustomPlaylistsObjectPage"
+                }
+            ],
+            "targets": {
+                "PersonalizationsList": {
+                    "type": "Component",
+                    "id": "PersonalizationsList",
+                    "name": "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings": {
+                            "entitySet": "Personalizations",
+                            "variantManagement": "Page",
+                            "navigation": {
+                                "Personalizations": {
+                                    "detail": {
+                                        "route": "PersonalizationsObjectPage"
+                                    }
+                                }
+                            },
+                            "initialLoad": "Enabled",
+                            "controlConfiguration": {
+                                "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "columns": {
+                                        "DataField::username": {
+                                            "width": "50%"
+                                        },
+                                        "DataField::id": {
+                                            "width": "50%"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "PersonalizationsObjectPage": {
+                    "type": "Component",
+                    "id": "PersonalizationsObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "editableHeaderContent": true,
+                            "entitySet": "Personalizations",
+                            "navigation": {
+                                "customPlaylists": {
+                                    "detail": {
+                                        "route": "CustomPlaylistsObjectPage"
+                                    }
+                                }
+                            },
+                            "content": {
+                                "header": {
+                                    "anchorBarVisible": true,
+                                    "visible": true
+                                }
+                            },
+                            "showRelatedApps": true,
+                            "sectionLayout": "Page",
+                            "controlConfiguration": {
+                                "customPlaylists/@com.sap.vocabularies.UI.v1.LineItem#i18ncustomPlaylists": {
+                                    "tableSettings": {
+                                        "enableExport": true,
+                                        "enableFullScreen": true,
+                                        "quickVariantSelection": {
+                                            "showCounts": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "DataField::title": {
+                                            "width": "80%"
+                                        },
+                                        "DataField::createdAt": {
+                                            "width": "20%"
+                                        }
+                                    }
+                                },
+                                "favorites/@com.sap.vocabularies.UI.v1.LineItem#i18nfavorites": {
+                                    "tableSettings": {
+                                        "enableFullScreen": true
+                                    },
+                                    "columns": {
+                                        "DataField::details::image": {
+                                            "width": "10%"
+                                        },
+                                        "DataField::itemType::name": {
+                                            "width": "20%"
+                                        },
+                                        "DataField::details::description": {
+                                            "width": "70%"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "CustomPlaylistsObjectPage": {
+                    "type": "Component",
+                    "id": "CustomPlaylistsObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "editableHeaderContent": false,
+                            "entitySet": "CustomPlaylists",
+                            "sectionLayout": "Page",
+                            "controlConfiguration": {
+                                "tracks/@com.sap.vocabularies.UI.v1.LineItem#i18ntracklist": {
+                                    "tableSettings": {
+                                        "enableExport": true,
+                                        "enableFullScreen": true
+                                    },
+                                    "columns": {
+                                        "DataField::details::image": {
+                                            "width": "10%"
+                                        },
+                                        "DataField::details::releaseDate": {
+                                            "width": "10%"
+                                        },
+                                        "DataField::details::title": {
+                                            "width": "50%"
+                                        },
+                                        "DataField::details::artist": {
+                                            "width": "30%"
+                                        }
+                                    }
+                                }
+                            },
+                            "content": {
+                                "header": {
+                                    "anchorBarVisible": true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "extends": {
+            "extensions": {
+                "sap.ui.controllerExtensions": {}
+            }
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "cap-rs-music-app"
+    }
+}

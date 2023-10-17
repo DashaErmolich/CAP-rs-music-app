@@ -1,40 +1,49 @@
 {
-  "name": "cap-rs-music-app",
-  "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@sap/cds": "^7",
-    "@sap/cds-hana": "^2",
-    "@sap/html5-app-deployer": "^5.0.0",
-    "@sap/xssec": "^3",
-    "express": "^4",
-    "passport": "^0",
-    "rimraf": "^5.0.1"
-  },
-  "devDependencies": {
-    "@cap-js/sqlite": "^1",
-    "@sap/approuter": "^14.3.2",
-    "@sap/cds-dk": "^7",
-    "@sap/html5-repo-mock": "^2.1.5"
-  },
-  "scripts": {
-    "start": "cds-serve",
-    "watch:hybrid": "cds watch --profile hybrid",
-    "hana-deploy:hybrid-undeploy": "cds deploy --to hana --profile hybrid --auto-undeploy",
-    "hana-deploy:hybrid": "cds deploy --to hana --profile hybrid",
-    "clean": "npx rimraf mta_archives resources",
-    "build": "npm run clean && mbt build",
-    "deploy": "cf deploy mta_archives/cap-rs-music-app_1.0.0.mtar"
-  },
-  "cds": {
-    "requires": {
-      "[hybrid]": {
-        "db": "hana"
-      },
-      "auth": "xsuaa"
-    }
-  }
+    "name": "cap-rs-music-app",
+    "version": "1.0.0",
+    "description": "A simple CAP project.",
+    "repository": "<Add your repository here>",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@sap-cloud-sdk/connectivity": "^3.6.0",
+        "@sap-cloud-sdk/http-client": "^3.6.0",
+        "@sap/cds": "^7",
+        "@sap/cds-hana": "^2",
+        "@sap/html5-app-deployer": "^5.0.0",
+        "@sap/xssec": "^3",
+        "express": "^4",
+        "passport": "^0",
+        "rimraf": "^5.0.1"
+    },
+    "devDependencies": {
+        "@cap-js/sqlite": "^1",
+        "@sap/approuter": "^14.3.2",
+        "@sap/cds-dk": "^7",
+        "@sap/html5-repo-mock": "^2.1.5",
+        "@sap/ux-specification": "^1.108.15",
+        "rimraf": "^3.0.2"
+    },
+    "scripts": {
+        "start": "cds-serve",
+        "watch:hybrid": "cds watch --profile hybrid",
+        "hana-deploy:hybrid-undeploy": "cds deploy --to hana --profile hybrid --auto-undeploy",
+        "hana-deploy:hybrid": "cds deploy --to hana --profile hybrid",
+        "clean": "npx rimraf mta_archives resources",
+        "build": "rimraf resources mta_archives && mbt build --mtar archive",
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+        "watch-admin-app": "cds watch --open admin-app/webapp/index.html?sap-ui-xx-viewCache=false",
+        "undeploy": "cf undeploy cap-rs-music-app --delete-services --delete-service-keys --delete-service-brokers"
+    },
+    "cds": {
+        "requires": {
+            "[hybrid]": {
+                "db": "hana"
+            },
+            "auth": "xsuaa"
+        }
+    },
+    "sapux": [
+        "app/admin-app"
+    ]
 }

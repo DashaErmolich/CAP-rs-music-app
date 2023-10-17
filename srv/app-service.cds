@@ -19,4 +19,6 @@ service AdminService @(requires: 'admin') {
     entity CustomPlaylists as projection on my.CustomPlaylists;
     
     entity CustomPlayliststTracks as projection on my.CustomPlayliststTracks;
+
+    entity DeezerDetails as projection on my.DeezerDetails;
 }
